@@ -1,32 +1,36 @@
-import { BrowserRouter } from "react-router-dom";
-import { Routes } from "react-router-dom";
-import { Route } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { NavLink, Routes, Route } from "react-router-dom";
 import Home from "./pages/home";
 import About from "./pages/about";
 import Services from "./pages/services";
-import Contact from "./pages/contact"; 
-import './global.css'; // Import global styles
-
+import Contact from "./pages/contact";
+import "./global.css";
 
 function App() {
   return (
-    <BrowserRouter>
-      <header>
-        <nav>
-          <Link to="/">Home</Link>
-          <Link to="/about">About</Link>
-          <Link to="/services">Services</Link>
-          <Link to="/contact">Contact</Link>
-        </nav>
+    <>
+      <header className="site-header">
+        <div className="wrap">
+          <div className="brand">JAL Painting</div>
+          <nav>
+            <ul className="nav">
+              <li><NavLink to="/" end>Home</NavLink></li>
+              <li><NavLink to="/about">About</NavLink></li>
+              <li><NavLink to="/services">Services</NavLink></li>
+              <li><NavLink to="/contact">Contact</NavLink></li>
+            </ul>
+          </nav>
+        </div>
       </header>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/services" element={<Services />} />
-        <Route path="/contact" element={<Contact />} />
-      </Routes>
-    </BrowserRouter>
+
+      <main className="wrap">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/contact" element={<Contact />} />
+        </Routes>
+      </main>
+    </>
   );
 }
 
