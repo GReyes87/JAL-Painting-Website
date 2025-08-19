@@ -16,7 +16,7 @@
   border-radius: 14px;
   background-image:
     linear-gradient(rgba(0,0,0,.45), rgba(0,0,0,.35)),
-    url('/images/hero/hero.jpg'); /* update filename if different */
+    url('public/images/hero/hero.jpg'); /* update filename if different */
   background-size: cover;
   background-position: center;
 }
