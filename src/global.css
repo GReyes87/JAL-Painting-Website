@@ -1,34 +1,100 @@
-/* ==== Hero (Home) ==== */
-.hero.hero--home{
-  position: relative;
-  display: grid;
-  align-items: center;
-  min-height: 52vh;
-  margin: 20px 0;
-  color: #fff;
-  border-radius: 14px;
-}
-
-.hero__content{ padding: 64px 16px; }
-.hero__title{ font-size: clamp(28px,6vw,56px); line-height: 1.05; margin: 0 0 8px; }
-.hero__subtitle{
-  font-size: clamp(16px,2.2vw,20px);
-  color: rgba(255,255,255,.92);
-  max-width: 60ch;
-  margin: 0 0 18px;
-}
-.hero__actions{ display: flex; flex-wrap: wrap; gap: 12px; }
-
-/* Buttons (blue/black/white palette) */
+/* ===== Brand (blue / black / white) ===== */
 :root{
-  --brand:#2563eb;    /* blue */
-  --ink:#0b0f19;      /* near-black */
-  --bg:#ffffff;       /* white */
+  --brand:#2563eb;      /* blue */
+  --ink:#0b0f19;        /* near-black */
+  --bg:#ffffff;         /* white */
+  --muted:#6b7280;
+  --wrap:1100px;
 }
+
+/* ===== Base ===== */
+*{box-sizing:border-box}
+html,body,#root{height:100%}
+body{
+  margin:0; color:var(--ink); background:var(--bg);
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  line-height:1.6;
+}
+a{color:inherit; text-decoration:none}
+img{max-width:100%; display:block; border-radius:10px}
+.wrap{max-width:var(--wrap); margin:0 auto; padding:0 16px}
+h1{font-size:clamp(28px,6vw,56px); line-height:1.05; margin:0 0 8px}
+h2{font-size:clamp(22px,3.6vw,32px); margin:24px 0 12px}
+
+/* ===== Buttons ===== */
 .btn{
-  display:inline-block; padding:10px 16px; border:1px solid #111; border-radius:10px; text-decoration:none;
+  display:inline-block; padding:10px 16px;
+  border:1px solid #111; border-radius:10px; text-decoration:none;
 }
-.btn--primary{ background:var(--brand); border-color:var(--brand); color:#fff; }
-.btn--primary:hover{ filter:brightness(.92); }
-.btn--ghost{ background:transparent; color:#fff; border-color:rgba(255,255,255,.75); }
-.btn--ghost:hover{ border-color:#fff; }
+.btn--primary{ background:var(--brand); border-color:var(--brand); color:#fff }
+.btn--primary:hover{ filter:brightness(.92) }
+.btn--ghost{ background:transparent; color:#fff; border-color:rgba(255,255,255,.75) }
+.btn--ghost:hover{ border-color:#fff }
+
+/* ===== Header / Nav ===== */
+.site-header{
+  position:sticky; top:0; z-index:100;
+  background:#fff;
+  border-bottom:1px solid #e5e7eb;
+  box-shadow:0 2px 10px rgba(0,0,0,.04);
+}
+.header__row{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:16px; padding:12px 16px;
+}
+.brand{
+  display:flex; align-items:center; gap:10px;
+  font-weight:700; letter-spacing:.2px;
+}
+.brand__mark{
+  background:var(--brand); color:#fff; font-weight:800;
+  padding:6px 8px; border-radius:8px;
+}
+.brand__name{ color:var(--ink) }
+
+.site-nav{ display:flex; align-items:center }
+.nav{
+  list-style:none; display:flex; gap:18px; margin:0; padding:0;
+}
+.nav a{
+  padding:8px 10px; border-radius:8px; transition:background .15s,color .15s;
+}
+.nav a:hover{ background:#f1f5ff; color:var(--brand) }
+.nav a.active{ color:var(--brand); font-weight:600 }
+
+/* Mobile toggle */
+.nav-toggle{
+  display:none; width:40px; height:34px; border:0; background:transparent; padding:0;
+}
+.nav-toggle__bar{ display:block; width:24px; height:2px; background:var(--ink); margin:4px auto }
+
+/* Phone CTA on the right */
+.header__cta{ margin-left:auto }
+@media (max-width: 900px){
+  .nav-toggle{ display:inline-flex; align-items:center; justify-content:center }
+  .site-nav{
+    position:absolute; left:0; right:0; top:100%;
+    display:none; background:#fff; border-bottom:1px solid #e5e7eb;
+    box-shadow:0 10px 20px rgba(0,0,0,.05);
+  }
+  .site-nav.is-open{ display:block }
+  .site-nav .nav{ flex-direction:column; gap:10px; padding:12px 16px }
+  .header__cta{ display:none }
+}
+
+/* ===== Hero (Home) ===== */
+/* Background image is set inline in Home component. */
+.hero.hero--home{
+  position:relative; display:grid; align-items:center;
+  min-height:52vh; margin:20px 0; color:#fff; border-radius:14px;
+}
+.hero__content{ padding:64px 16px }
+.hero__subtitle{
+  font-size:clamp(16px,2.2vw,20px); color:rgba(255,255,255,.92);
+  max-width:60ch; margin:0 0 18px;
+}
+.hero__actions{ display:flex; flex-wrap:wrap; gap:12px }
+
+/* ===== Footer ===== */
+.site-footer{ border-top:1px solid #e5e7eb; background:#fafafa; margin-top:36px }
+.site-footer .wrap{ padding:16px }
