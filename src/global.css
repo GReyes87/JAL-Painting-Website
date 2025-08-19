@@ -83,7 +83,6 @@ h2{font-size:clamp(22px,3.6vw,32px); margin:24px 0 12px}
 }
 
 /* ===== Hero (Home) ===== */
-/* Background image is set inline in Home component. */
 .hero.hero--home{
   position:relative; display:grid; align-items:center;
   min-height:52vh; margin:20px 0; color:#fff; border-radius:14px;
@@ -98,3 +97,40 @@ h2{font-size:clamp(22px,3.6vw,32px); margin:24px 0 12px}
 /* ===== Footer ===== */
 .site-footer{ border-top:1px solid #e5e7eb; background:#fafafa; margin-top:36px }
 .site-footer .wrap{ padding:16px }
+
+/* ===== Grid + Card utilities ===== */
+.grid {
+  display: grid;
+  gap: 20px;
+}
+.grid-3 {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+.card {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #fff;
+  padding: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,.04);
+  text-align: center;
+}
+
+/* ===== Chips (values) ===== */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 8px;
+  padding: 0;
+  list-style: none;
+}
+.chip {
+  display: inline-block;
+  padding: 6px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  background: #fff;
+  font-weight: 500;
+  color: var(--ink);
+  white-space: nowrap;
+}
