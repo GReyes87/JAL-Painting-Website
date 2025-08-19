@@ -1,27 +1,55 @@
-:root {
-    --wrap: 1100px;
-    --ink: #111;
-    --bg: #fff;
-    --muted: #6b7280;
-  }
-  
-  * { box-sizing: border-box; }
-  html, body, #root { height: 100%; }
-  body { margin: 0; color: var(--ink); background: var(--bg); font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; }
-  
-  .wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 16px; }
-  
-  .site-header { border-bottom: 1px solid #eee; background: #fafafa; }
-  .site-header .wrap { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; }
-  .nav { list-style: none; display: flex; gap: 16px; margin: 0; padding: 0; }
-  .nav a { text-decoration: none; color: inherit; }
-  .nav a.active { text-decoration: underline; }
-  
-  .btn { display: inline-block; padding: 10px 14px; border: 1px solid #ddd; border-radius: 8px; }
-  
-  .grid { display: grid; gap: 16px; }
-  .grid-3 { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
-  
-  img { max-width: 100%; display: block; border-radius: 8px; }
-  .muted { color: var(--muted); }
-  
+/* ==== Brand tokens (blue / black / white) ==== */
+:root{
+  --brand: #2563eb;      /* blue */
+  --ink: #0b0f19;        /* near-black */
+  --bg: #ffffff;         /* white */
+}
+
+/* ==== Hero (Home) ==== */
+.hero.hero--home{
+  position: relative;
+  display: grid;
+  align-items: center;
+  min-height: 52vh;
+  margin: 20px 0;
+  color: #fff;
+  border-radius: 14px;
+  background-image:
+    linear-gradient(rgba(0,0,0,.45), rgba(0,0,0,.35)),
+    url('/images/hero/brush-hero.jpg'); /* update filename if different */
+  background-size: cover;
+  background-position: center;
+}
+
+.hero__content{ padding: 64px 16px; }
+.hero__title{ font-size: clamp(28px,6vw,56px); line-height: 1.05; margin: 0 0 8px; }
+.hero__subtitle{
+  font-size: clamp(16px,2.2vw,20px);
+  color: rgba(255,255,255,.92);
+  max-width: 60ch;
+  margin: 0 0 18px;
+}
+.hero__actions{ display: flex; flex-wrap: wrap; gap: 12px; }
+
+/* ==== Buttons (blue / white) ==== */
+.btn{
+  display: inline-block;
+  padding: 10px 16px;
+  border: 1px solid #111;
+  border-radius: 10px;
+  text-decoration: none;
+}
+
+.btn--primary{
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+}
+.btn--primary:hover{ filter: brightness(.92); }
+
+.btn--ghost{
+  background: transparent;
+  color: #fff;
+  border-color: rgba(255,255,255,.75);
+}
+.btn--ghost:hover{ border-color: #fff; }
