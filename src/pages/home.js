@@ -20,7 +20,7 @@ export default function Home() {
             Interior, exterior, and cabinet refinishing for homes & businesses.
           </p>
 
-          <div className="hero__actions">
+        <div className="hero__actions">
             <Link to="/contact" className="btn btn--primary">
               Get a Free Quote
             </Link>
@@ -55,14 +55,8 @@ export default function Home() {
         <h2>What We Stand For</h2>
         <ul className="chips" aria-label="Company values">
           {[
-            "Community",
-            "Teamwork",
-            "Ethical",
-            "Quality",
-            "Safety",
-            "Eco-Friendly",
-            "On-Time",
-            "Transparent Pricing"
+            "Community","Teamwork","Ethical","Quality",
+            "Safety","Eco-Friendly","On-Time","Transparent Pricing"
           ].map((word) => (
             <li key={word} className="chip">{word}</li>
           ))}

@@ -62,24 +62,15 @@ h2{font-size:clamp(22px,3.6vw,32px); margin:24px 0 12px}
 .nav a:hover{ background:#f1f5ff; color:var(--brand) }
 .nav a.active{ color:var(--brand); font-weight:600 }
 
-/* Mobile toggle */
-.nav-toggle{
-  display:none; width:40px; height:34px; border:0; background:transparent; padding:0;
-}
-.nav-toggle__bar{ display:block; width:24px; height:2px; background:var(--ink); margin:4px auto }
-
-/* Phone CTA on the right */
+/* Keep phone CTA aligned right */
 .header__cta{ margin-left:auto }
+
+/* Make the same nav work nicely on small screens (no hamburger) */
 @media (max-width: 900px){
-  .nav-toggle{ display:inline-flex; align-items:center; justify-content:center }
-  .site-nav{
-    position:absolute; left:0; right:0; top:100%;
-    display:none; background:#fff; border-bottom:1px solid #e5e7eb;
-    box-shadow:0 10px 20px rgba(0,0,0,.05);
-  }
-  .site-nav.is-open{ display:block }
-  .site-nav .nav{ flex-direction:column; gap:10px; padding:12px 16px }
-  .header__cta{ display:none }
+  .header__row{ flex-wrap:wrap }
+  .site-nav{ order:3; width:100% }
+  .nav{ flex-wrap:wrap; gap:12px }
+  .header__cta{ order:2 }
 }
 
 /* ===== Hero (Home) ===== */
@@ -99,13 +90,8 @@ h2{font-size:clamp(22px,3.6vw,32px); margin:24px 0 12px}
 .site-footer .wrap{ padding:16px }
 
 /* ===== Grid + Card utilities ===== */
-.grid {
-  display: grid;
-  gap: 20px;
-}
-.grid-3 {
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-}
+.grid { display:grid; gap:20px; }
+.grid-3 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
 .card {
   border: 1px solid #e5e7eb;
   border-radius: 12px;
