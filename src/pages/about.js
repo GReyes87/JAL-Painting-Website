@@ -26,7 +26,6 @@ export default function About() {
         <div className="stats">
           <div className="stat"><div className="kpi">10+ yrs</div><div className="muted">Painting locally</div></div>
           <div className="stat"><div className="kpi">Licensed</div><div className="muted">& insured</div></div>
-          <div className="stat"><div className="kpi">98%</div><div className="muted">Great reviews</div></div>
           <div className="stat"><div className="kpi">Low/Zero-VOC</div><div className="muted">Paint options</div></div>
         </div>
       </section>
