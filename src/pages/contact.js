@@ -80,7 +80,6 @@ export default function Contact() {
           </p>
           <div className="cta">
             <Link className="btn btn--light" to="/services">View Services</Link>
-            <a className="btn btn--ghost" href="tel:+12408765629">Call (240) 876-5629</a>
           </div>
           <ul className="chips" style={{marginTop:12}}>
             <li className="chip">Licensed & Insured</li>
