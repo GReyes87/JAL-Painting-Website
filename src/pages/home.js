@@ -24,9 +24,6 @@ export default function Home() {
             <Link to="/contact" className="btn btn--primary">
               Get a Free Quote
             </Link>
-            <a href="tel:+15551234567" className="btn btn--ghost">
-              Call (555) 123-4567
-            </a>
           </div>
         </div>
       </section>
