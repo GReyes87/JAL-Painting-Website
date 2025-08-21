@@ -3,32 +3,37 @@ import { Link } from "react-router-dom";
 export default function About() {
   return (
     <>
-      {/* Hero */}
-      <section className="about-hero">
-        <div className="wrap">
+      {/* Hero band */}
+      <section className="band">
+        <div className="wrap band__inner">
           <h1>Craftsmanship you can see. Care you can feel.</h1>
           <p className="muted">
             Maryland’s family-run painting team delivering clean prep, durable finishes, and zero-stress service.
           </p>
           <div className="cta">
-            <Link className="btn" to="/contact">Get a Free Quote</Link>
-            <a className="btn" href="tel:+12408765629">Call (240) 876-5629</a>
+            <Link className="btn btn--light" to="/contact">Get a Free Quote</Link>
+            <a className="btn btn--ghost" href="tel:+12408765629">Call (240) 876-5629</a>
           </div>
+          <ul className="chips" style={{marginTop:12}}>
+            <li className="chip">Licensed & Insured</li>
+            <li className="chip">Low/Zero-VOC Options</li>
+            <li className="chip">Clean, Tidy Job Sites</li>
+          </ul>
         </div>
       </section>
 
       {/* Trust stats */}
-      <section className="stats">
-        <div className="wrap">
-          <div className="stat"><div className="kpi">10+ yrs</div><div className="label">Painting locally</div></div>
-          <div className="stat"><div className="kpi">Licensed</div><div className="label">& insured</div></div>
-          <div className="stat"><div className="kpi">98%</div><div className="label">Great reviews</div></div>
-          <div className="stat"><div className="kpi">Low/Zero-VOC</div><div className="label">Paint options</div></div>
+      <section className="wrap section">
+        <div className="stats">
+          <div className="stat"><div className="kpi">10+ yrs</div><div className="muted">Painting locally</div></div>
+          <div className="stat"><div className="kpi">Licensed</div><div className="muted">& insured</div></div>
+          <div className="stat"><div className="kpi">98%</div><div className="muted">Great reviews</div></div>
+          <div className="stat"><div className="kpi">Low/Zero-VOC</div><div className="muted">Paint options</div></div>
         </div>
       </section>
 
       {/* Mission + photo */}
-      <section className="wrap two-col" id="mission">
+      <section className="wrap section two-col" id="mission">
         <div>
           <h2>Our Mission</h2>
           <p>
@@ -48,22 +53,28 @@ export default function About() {
       </section>
 
       {/* Values */}
-      <section className="wrap values" id="values" style={{ marginTop: 24 }}>
+      <section className="wrap section">
         <h2>What We Value</h2>
-        <div className="grid">
-          <article className="card"><h3>Community</h3><p>We live where we work and give back locally.</p></article>
-          <article className="card"><h3>Teamwork</h3><p>Professional, respectful crews—trained and background-checked.</p></article>
-          <article className="card"><h3>Craftsmanship</h3><p>Careful prep, sharp lines, and durable materials.</p></article>
-          <article className="card"><h3>Ethics & Safety</h3><p>Up-front pricing, written changes, and safe job sites.</p></article>
+        <div className="grid grid-3">
+          <article className="card"><h3>Community</h3><p className="muted">We live where we work and give back locally.</p></article>
+          <article className="card"><h3>Teamwork</h3><p className="muted">Professional, respectful crews—trained and background-checked.</p></article>
+          <article className="card"><h3>Craftsmanship</h3><p className="muted">Careful prep, sharp lines, and durable materials.</p></article>
+          <article className="card"><h3>Ethics & Safety</h3><p className="muted">Up-front pricing, written changes, and safe job sites.</p></article>
         </div>
       </section>
 
       {/* Closing CTA */}
-      <section className="wrap" style={{ margin: "28px 0" }}>
-        <p>
-          Ready to refresh your space? <Link to="/contact">Request a free quote</Link> or call{" "}
-          <a href="tel:+12408765629">(240) 876-5629</a>.
-        </p>
+      <section className="wrap section">
+        <div className="card" style={{display:'flex', justifyContent:'space-between', alignItems:'center', gap:12, flexWrap:'wrap'}}>
+          <div>
+            <h3 style={{margin:'4px 0'}}>Ready to refresh your space?</h3>
+            <p className="muted" style={{margin:0}}>Request a free quote or call us now.</p>
+          </div>
+          <div style={{display:'flex', gap:10}}>
+            <Link to="/contact" className="btn btn--primary">Request Quote</Link>
+            <a className="btn" href="tel:+12408765629">Call (240) 876-5629</a>
+          </div>
+        </div>
       </section>
     </>
   );

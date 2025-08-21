@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 
-/* keep options stable to silence exhaustive-deps and avoid re-renders */
+/* stable list for ESLint + consistent select options */
 const BASE_OPTIONS = [
   "Drywall Repair",
   "General Painting",
@@ -57,6 +57,7 @@ export default function Contact() {
     setErrors(eobj);
     if (Object.keys(eobj).length) return;
 
+    // Day 3: client-side confirm (Day 4 wires to API)
     setStatus("Thanks! We received your request and will reach out shortly.");
     setForm({
       name: "",
@@ -70,30 +71,29 @@ export default function Contact() {
 
   return (
     <>
-      {/* Hero */}
-      <section className="contact-hero">
-        <div className="wrap">
+      {/* Hero band */}
+      <section className="band">
+        <div className="wrap band__inner">
           <h1>Get a Free, Same-Day Quote</h1>
           <p className="muted">
             Tell us about your project—interior, exterior, drywall repair, or power washing—and we’ll follow up fast.
           </p>
           <div className="cta">
-            <Link className="btn btn--primary" to="/services">View Services</Link>
-            <a className="btn" href="tel:+12408765629">Call (240) 876-5629</a>
+            <Link className="btn btn--light" to="/services">View Services</Link>
+            <a className="btn btn--ghost" href="tel:+12408765629">Call (240) 876-5629</a>
           </div>
-
-          <div className="trust">
-            <span className="chip">Licensed & Insured</span>
-            <span className="chip">Low/Zero-VOC Options</span>
-            <span className="chip">Clean, Tidy Job Sites</span>
-          </div>
+          <ul className="chips" style={{marginTop:12}}>
+            <li className="chip">Licensed & Insured</li>
+            <li className="chip">Low/Zero-VOC Options</li>
+            <li className="chip">Clean, Tidy Job Sites</li>
+          </ul>
         </div>
       </section>
 
-      {/* Form + sidebar */}
+      {/* Form + Sidebar */}
       <section className="wrap contact-layout">
-        <form onSubmit={onSubmit} noValidate className="card form-card">
-          <h2 style={{ marginTop: 0 }}>Contact / Reservation</h2>
+        <form onSubmit={onSubmit} noValidate className="card form-card" aria-label="Contact form">
+          <h2 style={{marginTop:0}}>Contact / Reservation</h2>
 
           <div className="field">
             <label htmlFor="name">Name *</label>
@@ -128,9 +128,7 @@ export default function Contact() {
               <label htmlFor="service">Service</label>
               <select id="service" name="service" value={form.service} onChange={onChange}>
                 <option value="">Select a service…</option>
-                {options.map((opt) => (
-                  <option key={opt} value={opt}>{opt}</option>
-                ))}
+                {options.map((opt) => <option key={opt} value={opt}>{opt}</option>)}
               </select>
             </div>
 
@@ -156,8 +154,8 @@ export default function Contact() {
           {status && <p className="success" aria-live="polite">{status}</p>}
         </form>
 
-        <aside className="card side-panel">
-          <h3 style={{ marginTop: 0 }}>What you can expect</h3>
+        <aside className="card side-panel" aria-label="What to expect">
+          <h3 style={{marginTop:0}}>What you can expect</h3>
           <ul className="checklist">
             <li>Clear, itemized quote</li>
             <li>Flexible scheduling</li>
@@ -169,7 +167,7 @@ export default function Contact() {
           <p className="muted">Mon–Sat • 8am–6pm</p>
 
           <h3>Service Area</h3>
-          <p className="muted">Montgomery County & nearby Maryland communities</p>
+          <p className="muted">Montgomery County, Prince George's County & nearby Maryland communities</p>
 
           <h3>Need help choosing?</h3>
           <p className="muted">Tell us the surface and your goal—we’ll recommend the best approach.</p>
