@@ -2,8 +2,9 @@ import { NavLink, Routes, Route, Link } from "react-router-dom";
 import Home from "./pages/home";
 import About from "./pages/about";
 import Services from "./pages/services";
-import Contact from "./pages/contact";
 import "./global.css";
+import Contact from "./pages/contact";
+import Admin from "./pages/admin";
 
 export default function App() {
   return (
@@ -38,6 +39,7 @@ export default function App() {
           <Route path="/about" element={<About />} />
           <Route path="/services" element={<Services />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/admin" element={<Admin />} />
         </Routes>
       </main>
 
