@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 const STATUSES = ["new", "contacted", "scheduled", "done", "archived"];
 
 export default function Admin() {
-  const [token, setToken] = useState(localStorage.getItem("ADMIN_TOKEN") || "");
+  const [token, setToken] = useState((localStorage.getItem("ADMIN_TOKEN") || "").trim());
   const [rows, setRows] = useState([]);
   const [err, setErr] = useState("");
   const [loading, setLoading] = useState(false);
@@ -17,7 +17,7 @@ export default function Admin() {
   useEffect(() => {
     const ensureToken = async () => {
       if (!token) {
-        const t = window.prompt("Admin token:");
+        const t = (window.prompt("Admin token:") || "").trim();
         if (!t) return;
         localStorage.setItem("ADMIN_TOKEN", t);
         setToken(t);
@@ -26,7 +26,6 @@ export default function Admin() {
     ensureToken();
   }, [token]);
 
-  // Keep original load() for the Refresh button
   const load = async () => {
     if (!token) return;
     try {
@@ -35,37 +34,21 @@ export default function Admin() {
       const res = await fetch("/api/reservations", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      if (!res.ok) {
+        const text = await res.text().catch(() => "");
+        setErr(`HTTP ${res.status} — ${text || "Unauthorized or server error."}`);
+        return;
+      }
       const data = await res.json();
       setRows(data);
     } catch (e) {
-      setErr("Unauthorized or server error. Check your token and server.");
+      setErr("Network error. Check API URL / proxy.");
     } finally {
       setLoading(false);
     }
   };
 
-  // Auto-load reservations when token changes (inline to satisfy ESLint)
-  useEffect(() => {
-    const run = async () => {
-      if (!token) return;
-      try {
-        setLoading(true);
-        setErr("");
-        const res = await fetch("/api/reservations", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
-        setRows(data);
-      } catch (e) {
-        setErr("Unauthorized or server error. Check your token and server.");
-      } finally {
-        setLoading(false);
-      }
-    };
-    run();
-  }, [token]);
+  useEffect(() => { load(); /* eslint-disable-next-line */ }, [token]);
 
   const updateStatus = async (id, status) => {
     try {
@@ -95,18 +78,13 @@ export default function Admin() {
           <option value="all">All</option>
           {STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
         </select>
-        <button
-          className="btn"
-          onClick={() => {
-            const t = window.prompt("New token:", token || "");
-            if (t !== null) { localStorage.setItem("ADMIN_TOKEN", t); setToken(t); }
-          }}
-        >
-          Set token
-        </button>
+        <button className="btn" onClick={() => {
+          const t = (window.prompt("New token:", token || "") || "").trim();
+          if (t !== null) { localStorage.setItem("ADMIN_TOKEN", t); setToken(t); }
+        }}>Set token</button>
       </div>
 
-      {err && <p style={{ color: "#b42318" }}>{err}</p>}
+      {err && <p style={{ color: "#b42318", marginTop: 12 }}>{err}</p>}
 
       <div style={{ overflowX: "auto", marginTop: 12 }}>
         <table style={{ width: "100%", borderCollapse: "separate", borderSpacing: 0 }}>
@@ -148,5 +126,9 @@ function Th({ children }) {
   );
 }
 function Td({ children }) {
-  return <td style={{ padding: "8px" }}>{children}</td>;
+  return (
+    <td style={{ padding: "8px" }}>
+      {children}
+    </td>
+  );
 }
