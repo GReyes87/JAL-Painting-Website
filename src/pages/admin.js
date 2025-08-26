@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 const STATUSES = ["new", "contacted", "scheduled", "done", "archived"];
 
@@ -26,7 +26,8 @@ export default function Admin() {
     ensureToken();
   }, [token]);
 
-  const load = async () => {
+  // Make load stable and list its real dependency (token)
+  const load = useCallback(async () => {
     if (!token) return;
     try {
       setLoading(true);
@@ -42,9 +43,12 @@ export default function Admin() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token]);
 
-  useEffect(() => { load(); /* eslint-disable-next-line */ }, [token]);
+  // Depend on the stable load function (fixes react-hooks/exhaustive-deps)
+  useEffect(() => {
+    load();
+  }, [load]);
 
   const updateStatus = async (id, status) => {
     try {
@@ -74,10 +78,15 @@ export default function Admin() {
           <option value="all">All</option>
           {STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
         </select>
-        <button className="btn" onClick={() => {
-          const t = window.prompt("New token:", token || "");
-          if (t !== null) { localStorage.setItem("ADMIN_TOKEN", t); setToken(t); }
-        }}>Set token</button>
+        <button
+          className="btn"
+          onClick={() => {
+            const t = window.prompt("New token:", token || "");
+            if (t !== null) { localStorage.setItem("ADMIN_TOKEN", t); setToken(t); }
+          }}
+        >
+          Set token
+        </button>
       </div>
 
       {err && <p style={{ color: "#b42318" }}>{err}</p>}
@@ -122,9 +131,5 @@ function Th({ children }) {
   );
 }
 function Td({ children }) {
-  return (
-    <td style={{ padding: "8px" }}>
-      {children}
-    </td>
-  );
+  return <td style={{ padding: "8px" }}>{children}</td>;
 }
