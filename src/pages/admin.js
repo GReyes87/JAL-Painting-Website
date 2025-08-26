@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const STATUSES = ["new", "contacted", "scheduled", "done", "archived"];
 
@@ -26,8 +26,8 @@ export default function Admin() {
     ensureToken();
   }, [token]);
 
-  // Make load stable and list its real dependency (token)
-  const load = useCallback(async () => {
+  // Keep original load() for the Refresh button
+  const load = async () => {
     if (!token) return;
     try {
       setLoading(true);
@@ -43,12 +43,29 @@ export default function Admin() {
     } finally {
       setLoading(false);
     }
-  }, [token]);
+  };
 
-  // Depend on the stable load function (fixes react-hooks/exhaustive-deps)
+  // Auto-load reservations when token changes (inline to satisfy ESLint)
   useEffect(() => {
-    load();
-  }, [load]);
+    const run = async () => {
+      if (!token) return;
+      try {
+        setLoading(true);
+        setErr("");
+        const res = await fetch("/api/reservations", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        setRows(data);
+      } catch (e) {
+        setErr("Unauthorized or server error. Check your token and server.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    run();
+  }, [token]);
 
   const updateStatus = async (id, status) => {
     try {
