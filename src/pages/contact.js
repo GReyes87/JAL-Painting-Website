@@ -34,7 +34,7 @@ export default function Contact() {
   }, [prefillService]);
 
   const [errors, setErrors] = useState({});
-  const [status, setStatus] = useState(null);
+  const [status, setStatus] = useState({ type: "idle", msg: "" });
 
   const onChange = (e) => {
     const { name, value } = e.target;
@@ -46,27 +46,62 @@ export default function Contact() {
     const e = {};
     if (!form.name.trim()) e.name = "Name is required.";
     if (!form.email.trim()) e.email = "Email is required.";
-    else if (!/^\S+@\S+\.\S+$/.test(form.email)) e.email = "Enter a valid email.";
+    else if (!/^\S+@\S+\.\S+$/.test(form.email))
+      e.email = "Enter a valid email.";
     return e;
   };
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    setStatus(null);
+    setStatus({ type: "idle", msg: "" });
+
     const eobj = validate();
     setErrors(eobj);
     if (Object.keys(eobj).length) return;
 
-    // Day 3: client-side confirm (Day 4 wires to API)
-    setStatus("Thanks! We received your request and will reach out shortly.");
-    setForm({
-      name: "",
-      email: "",
-      phone: "",
-      service: prefillService || "",
-      date: "",
-      message: "",
-    });
+    try {
+      setStatus({ type: "loading", msg: "Submitting…" });
+
+      const res = await fetch("/api/reservations", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          service: form.service,
+          date: form.date,
+          message: form.message,
+        }),
+      });
+
+      if (!res.ok) {
+        const payload = await res.json().catch(() => ({}));
+        const msg = payload?.errors
+          ? Object.values(payload.errors).join(" • ")
+          : payload?.error || `Request failed (${res.status})`;
+        throw new Error(msg);
+      }
+
+      setStatus({
+        type: "success",
+        msg: "Thanks! We received your request and will reach out shortly.",
+      });
+
+      setForm({
+        name: "",
+        email: "",
+        phone: "",
+        service: prefillService || "",
+        date: "",
+        message: "",
+      });
+    } catch (err) {
+      setStatus({
+        type: "error",
+        msg: err.message || "Something went wrong. Please try again.",
+      });
+    }
   };
 
   return (
@@ -76,12 +111,15 @@ export default function Contact() {
         <div className="wrap band__inner">
           <h1>Get a Free, Same-Day Quote</h1>
           <p className="muted">
-            Tell us about your project—interior, exterior, drywall repair, or power washing—and we’ll follow up fast.
+            Tell us about your project—interior, exterior, drywall repair, or
+            power washing—and we’ll follow up fast.
           </p>
           <div className="cta">
-            <Link className="btn btn--light" to="/services">View Services</Link>
+            <Link className="btn btn--light" to="/services">
+              View Services
+            </Link>
           </div>
-          <ul className="chips" style={{marginTop:12}}>
+          <ul className="chips" style={{ marginTop: 12 }}>
             <li className="chip">Licensed & Insured</li>
             <li className="chip">Low/Zero-VOC Options</li>
             <li className="chip">Clean, Tidy Job Sites</li>
@@ -91,33 +129,61 @@ export default function Contact() {
 
       {/* Form + Sidebar */}
       <section className="wrap contact-layout">
-        <form onSubmit={onSubmit} noValidate className="card form-card" aria-label="Contact form">
-          <h2 style={{marginTop:0}}>Contact / Reservation</h2>
+        <form
+          onSubmit={onSubmit}
+          noValidate
+          className="card form-card"
+          aria-label="Contact form"
+        >
+          <h2 style={{ marginTop: 0 }}>Contact / Reservation</h2>
 
           <div className="field">
             <label htmlFor="name">Name *</label>
             <input
-              id="name" name="name" value={form.name} onChange={onChange}
-              aria-invalid={!!errors.name} aria-describedby={errors.name ? "name-err" : undefined}
-              placeholder="Your full name" required
+              id="name"
+              name="name"
+              value={form.name}
+              onChange={onChange}
+              aria-invalid={!!errors.name}
+              aria-describedby={errors.name ? "name-err" : undefined}
+              placeholder="Your full name"
+              required
             />
-            {errors.name && <div id="name-err" className="error">{errors.name}</div>}
+            {errors.name && (
+              <div id="name-err" className="error">
+                {errors.name}
+              </div>
+            )}
           </div>
 
           <div className="field">
             <label htmlFor="email">Email *</label>
             <input
-              id="email" name="email" type="email" value={form.email} onChange={onChange}
-              aria-invalid={!!errors.email} aria-describedby={errors.email ? "email-err" : undefined}
-              placeholder="you@example.com" required
+              id="email"
+              name="email"
+              type="email"
+              value={form.email}
+              onChange={onChange}
+              aria-invalid={!!errors.email}
+              aria-describedby={errors.email ? "email-err" : undefined}
+              placeholder="you@example.com"
+              required
             />
-            {errors.email && <div id="email-err" className="error">{errors.email}</div>}
+            {errors.email && (
+              <div id="email-err" className="error">
+                {errors.email}
+              </div>
+            )}
           </div>
 
           <div className="field">
             <label htmlFor="phone">Phone</label>
             <input
-              id="phone" name="phone" type="tel" value={form.phone} onChange={onChange}
+              id="phone"
+              name="phone"
+              type="tel"
+              value={form.phone}
+              onChange={onChange}
               placeholder="(240) 876-5629"
             />
           </div>
@@ -125,36 +191,76 @@ export default function Contact() {
           <div className="two-up">
             <div className="field">
               <label htmlFor="service">Service</label>
-              <select id="service" name="service" value={form.service} onChange={onChange}>
+              <select
+                id="service"
+                name="service"
+                value={form.service}
+                onChange={onChange}
+              >
                 <option value="">Select a service…</option>
-                {options.map((opt) => <option key={opt} value={opt}>{opt}</option>)}
+                {options.map((opt) => (
+                  <option key={opt} value={opt}>
+                    {opt}
+                  </option>
+                ))}
               </select>
             </div>
 
             <div className="field">
               <label htmlFor="date">Preferred date (optional)</label>
-              <input id="date" name="date" type="date" value={form.date} onChange={onChange} />
+              <input
+                id="date"
+                name="date"
+                type="date"
+                value={form.date}
+                onChange={onChange}
+              />
             </div>
           </div>
 
           <div className="field">
             <label htmlFor="message">Project details</label>
             <textarea
-              id="message" name="message" rows={6} value={form.message} onChange={onChange}
+              id="message"
+              name="message"
+              rows={6}
+              value={form.message}
+              onChange={onChange}
               placeholder="Room sizes, surfaces, colors, timeline, access, etc."
             />
           </div>
 
           <div className="actions">
-            <button className="btn btn--primary" type="submit">Send Request</button>
-            <a className="btn" href="tel:+12408765629">Call (240) 876-5629</a>
+            <button
+              className="btn btn--primary"
+              type="submit"
+              disabled={status.type === "loading"}
+            >
+              {status.type === "loading" ? "Submitting…" : "Send Request"}
+            </button>
+            <a className="btn" href="tel:+12408765629">
+              Call (240) 876-5629
+            </a>
           </div>
 
-          {status && <p className="success" aria-live="polite">{status}</p>}
+          {status.msg && (
+            <p
+              className={
+                status.type === "error"
+                  ? "error"
+                  : status.type === "success"
+                  ? "success"
+                  : "muted"
+              }
+              aria-live="polite"
+            >
+              {status.msg}
+            </p>
+          )}
         </form>
 
         <aside className="card side-panel" aria-label="What to expect">
-          <h3 style={{marginTop:0}}>What you can expect</h3>
+          <h3 style={{ marginTop: 0 }}>What you can expect</h3>
           <ul className="checklist">
             <li>Clear, itemized quote</li>
             <li>Flexible scheduling</li>
@@ -166,10 +272,15 @@ export default function Contact() {
           <p className="muted">Mon–Sat • 8am–6pm</p>
 
           <h3>Service Area</h3>
-          <p className="muted">Montgomery County, Prince George's County & nearby Maryland communities</p>
+          <p className="muted">
+            Montgomery County, Prince George's County & nearby Maryland
+            communities
+          </p>
 
           <h3>Need help choosing?</h3>
-          <p className="muted">Tell us the surface and your goal—we’ll recommend the best approach.</p>
+          <p className="muted">
+            Tell us the surface and your goal—we’ll recommend the best approach.
+          </p>
         </aside>
       </section>
     </>
