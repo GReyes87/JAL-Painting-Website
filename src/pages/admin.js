@@ -1,37 +1,39 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 
 const STATUSES = ["new", "contacted", "scheduled", "done", "archived"];
+const API_BASE = process.env.REACT_APP_API_URL || ""; // empty in dev -> CRA proxy
 
 export default function Admin() {
-  const [token, setToken] = useState((localStorage.getItem("ADMIN_TOKEN") || "").trim());
+  const [token, setToken] = useState(
+    (localStorage.getItem("ADMIN_TOKEN") || "").trim()
+  );
   const [rows, setRows] = useState([]);
   const [err, setErr] = useState("");
   const [loading, setLoading] = useState(false);
   const [filter, setFilter] = useState("all");
 
   const visible = useMemo(
-    () => rows.filter(r => (filter === "all" ? true : r.status === filter)),
+    () => rows.filter((r) => (filter === "all" ? true : r.status === filter)),
     [rows, filter]
   );
 
+  // Ask for token if missing
   useEffect(() => {
-    const ensureToken = async () => {
-      if (!token) {
-        const t = (window.prompt("Admin token:") || "").trim();
-        if (!t) return;
-        localStorage.setItem("ADMIN_TOKEN", t);
-        setToken(t);
-      }
-    };
-    ensureToken();
+    if (!token) {
+      const t = (window.prompt("Admin token:") || "").trim();
+      if (!t) return;
+      localStorage.setItem("ADMIN_TOKEN", t);
+      setToken(t);
+    }
   }, [token]);
 
-  const load = async () => {
+  // Stable loader so it can be safely used in effects
+  const load = useCallback(async () => {
     if (!token) return;
     try {
       setLoading(true);
       setErr("");
-      const res = await fetch("/api/reservations", {
+      const res = await fetch(`${API_BASE}/api/reservations`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!res.ok) {
@@ -41,18 +43,21 @@ export default function Admin() {
       }
       const data = await res.json();
       setRows(data);
-    } catch (e) {
+    } catch {
       setErr("Network error. Check API URL / proxy.");
     } finally {
       setLoading(false);
     }
-  };
+  }, [token]);
 
-  useEffect(() => { load(); /* eslint-disable-next-line */ }, [token]);
+  // Load when token changes (ESLint-compliant)
+  useEffect(() => {
+    load();
+  }, [load]);
 
   const updateStatus = async (id, status) => {
     try {
-      await fetch(`/api/reservations/${id}`, {
+      await fetch(`${API_BASE}/api/reservations/${id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -60,7 +65,7 @@ export default function Admin() {
         },
         body: JSON.stringify({ status }),
       });
-      setRows(rs => rs.map(r => (r.id === id ? { ...r, status } : r)));
+      setRows((rs) => rs.map((r) => (r.id === id ? { ...r, status } : r)));
     } catch {
       alert("Failed to update status");
     }
@@ -74,14 +79,26 @@ export default function Admin() {
         <button className="btn" onClick={load} disabled={loading}>
           {loading ? "Refreshing…" : "Refresh"}
         </button>
-        <select value={filter} onChange={e => setFilter(e.target.value)}>
+        <select value={filter} onChange={(e) => setFilter(e.target.value)}>
           <option value="all">All</option>
-          {STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
+          {STATUSES.map((s) => (
+            <option key={s} value={s}>
+              {s}
+            </option>
+          ))}
         </select>
-        <button className="btn" onClick={() => {
-          const t = (window.prompt("New token:", token || "") || "").trim();
-          if (t !== null) { localStorage.setItem("ADMIN_TOKEN", t); setToken(t); }
-        }}>Set token</button>
+        <button
+          className="btn"
+          onClick={() => {
+            const t = (window.prompt("New token:", token || "") || "").trim();
+            if (t !== null) {
+              localStorage.setItem("ADMIN_TOKEN", t);
+              setToken(t);
+            }
+          }}
+        >
+          Set token
+        </button>
       </div>
 
       {err && <p style={{ color: "#b42318", marginTop: 12 }}>{err}</p>}
@@ -90,23 +107,40 @@ export default function Admin() {
         <table style={{ width: "100%", borderCollapse: "separate", borderSpacing: 0 }}>
           <thead>
             <tr>
-              <Th>When</Th><Th>Name</Th><Th>Email</Th><Th>Phone</Th>
-              <Th>Service</Th><Th>Preferred</Th><Th>Message</Th><Th>Status</Th>
+              <Th>When</Th>
+              <Th>Name</Th>
+              <Th>Email</Th>
+              <Th>Phone</Th>
+              <Th>Service</Th>
+              <Th>Preferred</Th>
+              <Th>Message</Th>
+              <Th>Status</Th>
             </tr>
           </thead>
           <tbody>
-            {visible.map(r => (
+            {visible.map((r) => (
               <tr key={r.id} style={{ borderTop: "1px solid #eef1f4" }}>
-                <Td>{r.created_at?.replace("T"," ").slice(0,16) || ""}</Td>
+                <Td>{r.created_at?.replace("T", " ").slice(0, 16) || ""}</Td>
                 <Td>{r.name}</Td>
-                <Td><a href={`mailto:${r.email}`}>{r.email}</a></Td>
-                <Td><a href={`tel:${r.phone || ""}`}>{r.phone}</a></Td>
+                <Td>
+                  <a href={`mailto:${r.email}`}>{r.email}</a>
+                </Td>
+                <Td>
+                  <a href={`tel:${r.phone || ""}`}>{r.phone}</a>
+                </Td>
                 <Td>{r.service}</Td>
                 <Td>{r.date}</Td>
                 <Td style={{ maxWidth: 320 }}>{r.message}</Td>
                 <Td>
-                  <select value={r.status} onChange={e => updateStatus(r.id, e.target.value)}>
-                    {STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
+                  <select
+                    value={r.status}
+                    onChange={(e) => updateStatus(r.id, e.target.value)}
+                  >
+                    {STATUSES.map((s) => (
+                      <option key={s} value={s}>
+                        {s}
+                      </option>
+                    ))}
                   </select>
                 </Td>
               </tr>
@@ -120,15 +154,18 @@ export default function Admin() {
 
 function Th({ children }) {
   return (
-    <th style={{ textAlign: "left", padding: "10px 8px", fontWeight: 700, borderBottom: "1px solid #eef1f4" }}>
+    <th
+      style={{
+        textAlign: "left",
+        padding: "10px 8px",
+        fontWeight: 700,
+        borderBottom: "1px solid #eef1f4",
+      }}
+    >
       {children}
     </th>
   );
 }
 function Td({ children }) {
-  return (
-    <td style={{ padding: "8px" }}>
-      {children}
-    </td>
-  );
+  return <td style={{ padding: "8px" }}>{children}</td>;
 }
