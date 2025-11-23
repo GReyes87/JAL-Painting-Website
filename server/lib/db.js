@@ -12,6 +12,10 @@ const dataDir = path.join(rootDir, 'data');
 export function ensureDb() {
   if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
   const dbPath = path.join(dataDir, 'jal.db');
+
+  // 🔥 Added this line so you can see EXACTLY which DB file your server is using
+  console.log("Using SQLite DB at:", dbPath);
+
   const db = new Database(dbPath);
   db.pragma('journal_mode = WAL');
 
@@ -31,3 +35,4 @@ export function ensureDb() {
 
   return db;
 }
+
