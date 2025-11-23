@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams, Link } from "react-router-dom";
+import { API_BASE } from "../apiConfig"; // 👈 NEW
 
 /* stable list for ESLint + consistent select options */
 const BASE_OPTIONS = [
@@ -34,7 +35,7 @@ export default function Contact() {
   }, [prefillService]);
 
   const [errors, setErrors] = useState({});
-  const [status, setStatus] = useState({ type: "idle", msg: "" });
+  const [status, setStatus] = useState({ type: "idle", msg: "" }); // ✅ fixed
 
   const onChange = (e) => {
     const { name, value } = e.target;
@@ -62,7 +63,7 @@ export default function Contact() {
     try {
       setStatus({ type: "loading", msg: "Submitting…" });
 
-      const res = await fetch("/api/reservations", {
+      const res = await fetch(`${API_BASE}/api/reservations`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -273,7 +274,7 @@ export default function Contact() {
 
           <h3>Service Area</h3>
           <p className="muted">
-            Montgomery County, Prince George's County & nearby Maryland
+            Montgomery County, Prince George&apos;s County & nearby Maryland
             communities
           </p>
 
@@ -286,3 +287,4 @@ export default function Contact() {
     </>
   );
 }
+
