@@ -1,11 +1,11 @@
 /* ===== Theme ===== */
 :root{
-  --brand:#2563eb;               /* primary blue */
-  --ink:#0b0f19;                 /* near-black */
-  --muted:#6b7280;               /* gray text */
-  --bg:#ffffff;                  /* page background */
-  --surface:#ffffff;             /* cards */
-  --ring:rgba(37,99,235,.22);    /* focus ring */
+  --brand:#2563eb;
+  --ink:#0b0f19;
+  --muted:#6b7280;
+  --bg:#ffffff;
+  --surface:#ffffff;
+  --ring:rgba(37,99,235,.22);
   --shadow:0 6px 18px rgba(9,12,20,.08);
   --radius:14px;
   --wrap:1100px;
@@ -32,7 +32,7 @@ h3{ font-size:clamp(18px,2.6vw,20px); margin:10px 0 6px }
 .btn{
   display:inline-block; padding:12px 16px;
   border:1px solid #e5e7eb; border-radius:12px; background:#fff;
-  font-weight:600; transition:.15s ease;
+  font-weight:600; transition:.15s ease; cursor:pointer;
 }
 .btn:hover{ transform:translateY(-1px) }
 .btn--primary{ background:var(--brand); color:#fff; border-color:var(--brand) }
@@ -89,7 +89,6 @@ h3{ font-size:clamp(18px,2.6vw,20px); margin:10px 0 6px }
 .band .muted{ color:rgba(255,255,255,.92) }
 .band .cta{ display:flex; flex-wrap:wrap; gap:12px; margin-top:12px }
 
-/* Image variant for Home hero */
 .band--image{
   background-image: linear-gradient(180deg, rgba(7,14,30,.65) 0%, rgba(7,14,30,.35) 60%, rgba(7,14,30,.35) 100%), var(--hero-img);
   background-size: cover;
@@ -97,7 +96,6 @@ h3{ font-size:clamp(18px,2.6vw,20px); margin:10px 0 6px }
 }
 .band--image .chip{ color:var(--ink); background:#fff }
 
-/* Ensure chips are readable on any band */
 .band .chip{ color:var(--ink); background:#fff }
 
 /* ===== Stats ===== */
@@ -121,7 +119,6 @@ h3{ font-size:clamp(18px,2.6vw,20px); margin:10px 0 6px }
 .two-up{ display:grid; gap:14px }
 @media (min-width:720px){ .two-up{ grid-template-columns:1fr 1fr } }
 
-/* readable inputs everywhere (fix white-on-white issue) */
 input, select, textarea{
   width:100%; padding:12px 12px; font:inherit;
   background:#fff; color:var(--ink);
@@ -140,6 +137,54 @@ input:focus, select:focus, textarea:focus{
 }
 .side-panel .checklist{ padding-left:18px; margin:8px 0 18px }
 .side-panel .checklist li{ margin:6px 0 }
+
+/* ===== Reviews ===== */
+.reviews-section{
+  margin-top:36px;
+  margin-bottom:10px;
+}
+
+.reviews-header{
+  text-align:center;
+  max-width:760px;
+  margin:0 auto 20px;
+}
+
+.review-card{
+  height:100%;
+}
+
+.review-stars{
+  font-size:20px;
+  letter-spacing:2px;
+  margin-bottom:10px;
+}
+
+.review-text{
+  color:var(--ink);
+  margin-bottom:14px;
+}
+
+.review-name{
+  margin:0;
+  color:var(--brand);
+  font-size:18px;
+}
+
+.review-form-wrap{
+  margin-top:30px;
+}
+
+.review-form-header{
+  text-align:center;
+  max-width:640px;
+  margin:0 auto 16px;
+}
+
+.review-form{
+  max-width:760px;
+  margin:0 auto;
+}
 
 /* ===== Footer ===== */
 .site-footer{ border-top:1px solid #eef1f4; background:#fafafa; margin-top:38px }
